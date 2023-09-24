@@ -1,0 +1,77 @@
+<div class="main-container">
+  <div class="form-container" [formGroup]="form">
+    <div class="form-input">
+      <span class="control-title">
+        Post size:
+      </span>
+      <input class="form-control default-input"
+             type="number">
+    </div>
+    <div class="form-input">
+      <span class="control-title">
+        Panel max length:
+      </span>
+      <input class="form-control default-input"
+             type="number">
+    </div>
+    <div class="form-input">
+      <span class="control-title">
+        Run horizontal length:
+      </span>
+      <input class="form-control default-input"
+             type="number">
+    </div>
+
+
+    <div class="form-group" [formArrayName]="controls.obstructions">
+      <div class="obstructions-title__block">
+        <span class="control-title">
+        Obstructions:
+      </span>
+        <button class="obstruction-btn"
+                (click)="addObstruction()">
+          <span>+</span>
+        </button>
+      </div>
+
+      <div class="obstructions-array">
+        <div *ngFor="let obstruction of obstructionsArray.controls; let idx = index">
+          <div formGroupName="{{idx}}" class="obstruction-section">
+            <div class="obstruction-group">
+              <div class="form-input">
+                <span>Size:</span>
+                <input class="form-control default-input"
+                       type="number">
+              </div>
+              <div class="form-input">
+                <span>Location:</span>
+                <input class="form-control default-input"
+                       type="number">
+              </div>
+              <div class="form-input">
+                <span>Type:</span>
+                <select id="obstruction-type-{{idx}}"
+                        class="default-input"
+                        [formControlName]="obstructionControls.type">
+                  <option *ngFor="let option of obstructionOptions"
+                          [ngValue]="option.value">
+                    {{option.name}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <button class="obstruction-btn"
+                    (click)="deleteObstruction(idx)">
+              -
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="view-container">
+
+  </div>
+</div>

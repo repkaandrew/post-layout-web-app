@@ -1,0 +1,78 @@
+.main-container {
+  width: 80vw;
+  height: calc(100vh - 2em - 64px - 2em);
+  display: flex;
+  gap: 2em;
+  margin: 2em auto;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.form-container {
+  padding: 1em;
+  flex-basis: 40%;
+
+  .form-input {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+
+    .default-input {
+      width: 200px;
+    }
+
+    select {
+      border: dimgrey solid 1px;
+      border-radius: 4px;
+      padding: 8px 4px;
+    }
+  }
+
+  .control-title {
+    width: 50%;
+    white-space: nowrap;
+  }
+}
+
+.view-container {
+  padding: 1em;
+  flex-grow: 1;
+  border: darkgrey solid 1px;
+}
+
+.obstructions-array {
+  padding-left: 16px;
+}
+
+.obstructions-title__block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.obstruction-btn {
+  border: darkgray solid 1px;
+  color: dimgrey;
+  border-radius: 4px;
+  min-width: 48px;
+  height: max-content;
+  padding: 4px;
+
+  &:hover {
+    border-color: dimgrey;
+  }
+}
+
+.obstruction-section {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+
+  .obstruction-group {
+    flex-basis: 75%;
+  }
+
+  .obstruction-btn {
+    align-self: flex-end;
+    margin-bottom: 4px;
+  }
+}
