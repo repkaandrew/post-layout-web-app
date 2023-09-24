@@ -19,6 +19,11 @@
 
     .default-input {
       width: 200px;
+
+      &:focus {
+        box-shadow: none;
+        border-color: dimgrey;
+      }
     }
 
     select {
