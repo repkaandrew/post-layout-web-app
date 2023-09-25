@@ -6,7 +6,7 @@ import {PostLayoutInput} from '../models/post-layout-input';
 import {lastValueFrom} from 'rxjs';
 
 @Injectable()
-export class UserService {
+export class PostLayoutService {
 
   private readonly resourceUrl = `${environment.apiHost}/api/v1/post-layout`;
 

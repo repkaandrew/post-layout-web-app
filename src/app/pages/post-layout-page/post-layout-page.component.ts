@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ObstructionType} from '../../models/post-layout-input';
+import {PostLayoutOption} from '../../models/post-layout-option';
+import {PostLayoutService} from '../../services/post-layout-service';
 
 @Component({
   selector: 'app-post-layout-page',
@@ -30,7 +32,10 @@ export class PostLayoutPageComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  postLayoutOptions: PostLayoutOption[];
+
+  constructor(private fb: FormBuilder, private layoutService: PostLayoutService) {
+    this.postLayoutOptions = [];
   }
 
   ngOnInit(): void {
@@ -68,5 +73,13 @@ export class PostLayoutPageComponent implements OnInit {
       [this.obstructionControls.horLocation]: this.createNumberControl(),
       [this.obstructionControls.type]: this.fb.control<ObstructionType>(ObstructionType.TRY_TO_AVOID, Validators.required)
     });
+  }
+
+  async calculate(): Promise<void> {
+    this.postLayoutOptions = await this.layoutService.calculateOptions(this.form.value);
+  }
+
+  calculationDisabled(): boolean {
+    return this.form.invalid;
   }
 }

@@ -5,6 +5,7 @@
         Post size:
       </span>
       <input class="form-control default-input"
+             [formControlName]="controls.postSize"
              type="number">
     </div>
     <div class="form-input">
@@ -12,6 +13,7 @@
         Panel max length:
       </span>
       <input class="form-control default-input"
+             [formControlName]="controls.panelMaxLength"
              type="number">
     </div>
     <div class="form-input">
@@ -19,9 +21,9 @@
         Run horizontal length:
       </span>
       <input class="form-control default-input"
+             [formControlName]="controls.runHorLength"
              type="number">
     </div>
-
 
     <div class="form-group" [formArrayName]="controls.obstructions">
       <div class="obstructions-title__block">
@@ -30,7 +32,7 @@
       </span>
         <button class="obstruction-btn"
                 (click)="addObstruction()">
-          <span>+</span>
+          <span>&plus;</span>
         </button>
       </div>
 
@@ -41,11 +43,13 @@
               <div class="form-input">
                 <span>Size:</span>
                 <input class="form-control default-input"
+                       [formControlName]="obstructionControls.size"
                        type="number">
               </div>
               <div class="form-input">
                 <span>Location:</span>
                 <input class="form-control default-input"
+                       [formControlName]="obstructionControls.horLocation"
                        type="number">
               </div>
               <div class="form-input">
@@ -62,15 +66,20 @@
             </div>
             <button class="obstruction-btn"
                     (click)="deleteObstruction(idx)">
-              -
+              <span>&minus;</span>
             </button>
           </div>
         </div>
       </div>
-
     </div>
 
+    <button class="btn btn-light"
+            [disabled]="calculationDisabled()"
+            (click)="calculate()">
+      <span>Calculate</span>
+    </button>
   </div>
+
   <div class="view-container">
 
   </div>
