@@ -40,9 +40,14 @@
 }
 
 .view-container {
-  padding: 1em;
   flex-grow: 1;
-  border: darkgrey solid 1px;
+  border: lightgray solid 1px;
+  border-radius: 6px;
+  overflow: hidden;
+
+  app-layout-view {
+    overflow: hidden;
+  }
 }
 
 .obstructions-array {

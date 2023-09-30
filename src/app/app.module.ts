@@ -9,11 +9,13 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {ReactiveFormsModule} from '@angular/forms';
 import {PostLayoutService} from './services/post-layout-service';
 import {HttpClientModule} from '@angular/common/http';
+import { LayoutViewComponent } from './components/layout-view-component/layout-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PostLayoutPageComponent
+    PostLayoutPageComponent,
+    LayoutViewComponent
   ],
   imports: [
     HttpClientModule,

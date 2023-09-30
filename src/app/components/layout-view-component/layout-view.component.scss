@@ -1,0 +1,8 @@
+#canvas-container {
+  height: 100%;
+
+  &::ng-deep canvas {
+    overflow: hidden;
+    outline: none;
+  }
+}
