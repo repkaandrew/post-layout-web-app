@@ -1,6 +1,15 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three';
+import {Color} from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import {ObstructionType} from '../../models/post-layout-input';
+
+const obstructionColor: { [key in ObstructionType]: Color } = {
+  [ObstructionType.PLACE_POST]: new Color('#80ff00'),
+  [ObstructionType.TRY_TO_AVOID]: new Color('#ff8000'),
+  [ObstructionType.MUST_AVOID]: new Color('#990000')
+}
+
 
 @Component({
   selector: 'app-layout-view',
@@ -39,25 +48,30 @@ export class LayoutViewComponent implements OnInit {
 
     this.initCamera();
     this.initCameraControls();
+    this.scene.add(new THREE.AxesHelper(500));
+    this.scene.add(new THREE.CameraHelper(this.camera));
 
     this.addPost(0);
     this.addPost(20);
+    this.addObstruction(3, 3, ObstructionType.PLACE_POST);
+    this.addObstruction(6, 3, ObstructionType.TRY_TO_AVOID);
+    this.addObstruction(9, 3, ObstructionType.MUST_AVOID);
+
     this.initLight();
     this.addGround();
-
 
     this.run();
   }
 
   private initLight(): void {
-    const light = new THREE.PointLight(0xffffff, 1);
+    const light = new THREE.PointLight('#ffffff', 1);
     this.camera.add(light);
     light.position.set(0, 100, 900);
   }
 
   private addGround(): void {
     const geometry = new THREE.PlaneGeometry(1000, 1000);
-    const material = new THREE.MeshBasicMaterial({color: 0xa8d993, side: THREE.DoubleSide});
+    const material = new THREE.MeshBasicMaterial({color: '#78b464', side: THREE.DoubleSide});
     const plane = new THREE.Mesh(geometry, material);
     plane.rotation.x = Math.PI / 2;
 
@@ -66,12 +80,22 @@ export class LayoutViewComponent implements OnInit {
 
   private addPost(position: number): void {
     const geometry = new THREE.BoxGeometry(3.5, 48, 3.5, 10, 100, 10);
-    const material = new THREE.MeshPhongMaterial({color: 0x6b5846});
+    const material = new THREE.MeshPhongMaterial({color: '#59473d'});
     const post = new THREE.Mesh(geometry, material);
 
     post.position.x = position;
     post.position.y = 24;
     this.scene.add(post);
+  }
+
+  private addObstruction(position: number, size: number, type: ObstructionType): void {
+    const geometry = new THREE.CylinderGeometry(size, size, 1, 100, 100);
+    const material = new THREE.MeshPhongMaterial({color: obstructionColor[type]});
+    const obstruction = new THREE.Mesh(geometry, material);
+
+    obstruction.position.x = position;
+    obstruction.position.y = 0.5;
+    this.scene.add(obstruction);
   }
 
   private initCamera(): void {
