@@ -45,6 +45,7 @@ export class LayoutViewComponent implements OnInit {
     this.initLight();
     this.addGround();
 
+
     this.run();
   }
 
@@ -71,8 +72,6 @@ export class LayoutViewComponent implements OnInit {
     post.position.x = position;
     post.position.y = 24;
     this.scene.add(post);
-
-    this.camera.position.z = 100;
   }
 
   private initCamera(): void {
@@ -86,11 +85,11 @@ export class LayoutViewComponent implements OnInit {
   private initCameraControls(): void {
     this.cameraControls = new OrbitControls(this.camera, this.engine.domElement);
 
-    const position = new THREE.Vector3(20, 20, 500);
-    const lookAt = new THREE.Vector3(0, position.y, 20);
-    this.camera.rotation.set(0, 0, 0);
+    const position = new THREE.Vector3(50, 50, 500);
+    const lookAt = new THREE.Vector3(50, 24, 0);
     this.cameraControls.object.position.copy(position);
     this.cameraControls.target.copy(lookAt);
+    this.cameraControls.update();
   }
 
   protected run(): void {
