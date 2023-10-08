@@ -10,7 +10,6 @@ const obstructionColor: { [key in ObstructionType]: Color } = {
   [ObstructionType.MUST_AVOID]: new Color('#990000')
 }
 
-
 @Component({
   selector: 'app-layout-view',
   templateUrl: './layout-view.component.html',
@@ -79,7 +78,7 @@ export class LayoutViewComponent implements OnInit {
   }
 
   private addPost(position: number): void {
-    const geometry = new THREE.BoxGeometry(3.5, 48, 3.5, 10, 100, 10);
+    const geometry = new THREE.BoxGeometry(3.5, 48, 3.5, 100, 100, 100);
     const material = new THREE.MeshPhongMaterial({color: '#59473d'});
     const post = new THREE.Mesh(geometry, material);
 

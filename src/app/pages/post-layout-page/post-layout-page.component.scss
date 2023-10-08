@@ -86,3 +86,15 @@
     margin-bottom: 4px;
   }
 }
+
+.calculate-button {
+  margin-top: 16px;
+  width: 200px;
+  border-color: #dee2e6;
+
+
+  &:disabled {
+    pointer-events: auto;
+    cursor: not-allowed;
+  }
+}
