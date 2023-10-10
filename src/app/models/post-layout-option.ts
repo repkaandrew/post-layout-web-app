@@ -1,6 +1,6 @@
 
 export interface PostLayoutOption {
-  posts: LayoutPost;
+  posts: LayoutPost[];
 }
 
 export interface LayoutPost {

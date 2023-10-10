@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ObstructionType} from '../../models/post-layout-input';
+import {ObstructionData, ObstructionType} from '../../models/post-layout-input';
 import {PostLayoutOption} from '../../models/post-layout-option';
 import {PostLayoutService} from '../../services/post-layout-service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-post-layout-page',
@@ -33,6 +34,8 @@ export class PostLayoutPageComponent implements OnInit {
   form: FormGroup;
 
   postLayoutOptions: PostLayoutOption[];
+  selectedOption: PostLayoutOption;
+  currObstructions: ObstructionData[];
 
   constructor(private fb: FormBuilder, private layoutService: PostLayoutService) {
     this.postLayoutOptions = [];
@@ -77,9 +80,39 @@ export class PostLayoutPageComponent implements OnInit {
 
   async calculate(): Promise<void> {
     this.postLayoutOptions = await this.layoutService.calculateOptions(this.form.value);
+    this.selectedOption = _.first(this.postLayoutOptions);
+    this.currObstructions = this.obstructionsArray.value;
   }
 
   calculationDisabled(): boolean {
     return this.form.invalid;
+  }
+
+  isNextOptionAvailable(): boolean {
+    return this.selectedOptionIndex < this.postLayoutOptions.length - 1;
+  }
+
+  isPreviousOptionAvailable(): boolean {
+    return this.selectedOptionIndex > 0;
+  }
+
+  onNextOption(): void {
+    const optionIndex = this.selectedOptionIndex;
+
+    if (optionIndex !== -1) {
+      this.selectedOption = this.postLayoutOptions[optionIndex + 1]
+    }
+  }
+
+  onPreviousOption(): void {
+    const optionIndex = this.selectedOptionIndex;
+
+    if (optionIndex !== -1) {
+      this.selectedOption = this.postLayoutOptions[optionIndex - 1]
+    }
+  }
+
+  private get selectedOptionIndex(): number | undefined {
+    return this.postLayoutOptions.indexOf(this.selectedOption);
   }
 }

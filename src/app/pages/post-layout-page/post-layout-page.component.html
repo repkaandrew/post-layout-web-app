@@ -81,6 +81,23 @@
   </div>
 
   <div class="view-container">
-    <app-layout-view></app-layout-view>
+    <app-layout-view
+    [postLayout]="selectedOption"
+    [obstructions]="currObstructions">
+    </app-layout-view>
+  </div>
+
+  <div class="options-selection-section">
+    <button class="btn btn-light"
+            [disabled]="!isPreviousOptionAvailable()"
+            (click)="onPreviousOption()">
+      <span>&lArr;</span>
+    </button>
+    <button class="btn btn-light"
+            [disabled]="!isNextOptionAvailable()"
+            (click)="onNextOption()">
+      <span>&rArr;</span>
+    </button>
   </div>
 </div>
+

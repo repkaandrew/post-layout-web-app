@@ -2,7 +2,7 @@ export class PostLayoutInput {
   postSize: number;
   panelMaxLength: number;
   runHorLength: number;
-  obstructions: ObstructionDataInput[];
+  obstructions: ObstructionData[];
 
   constructor(source: Partial<PostLayoutInput>) {
     this.postSize = source?.postSize;
@@ -12,7 +12,7 @@ export class PostLayoutInput {
   }
 }
 
-export class ObstructionDataInput {
+export class ObstructionData {
   size: number;
   horLocation: number;
   type: ObstructionType;

@@ -1,8 +1,19 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import * as THREE from 'three';
-import {Color} from 'three';
+import {Color, Object3D} from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import {ObstructionType} from '../../models/post-layout-input';
+import {ObstructionData, ObstructionType} from '../../models/post-layout-input';
+import {environment} from '../../../environments/environment';
+import {PostLayoutOption} from '../../models/post-layout-option';
 
 const obstructionColor: { [key in ObstructionType]: Color } = {
   [ObstructionType.PLACE_POST]: new Color('#80ff00'),
@@ -13,14 +24,19 @@ const obstructionColor: { [key in ObstructionType]: Color } = {
 @Component({
   selector: 'app-layout-view',
   templateUrl: './layout-view.component.html',
-  styleUrls: ['./layout-view.component.scss']
+  styleUrls: ['./layout-view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LayoutViewComponent implements OnInit {
+export class LayoutViewComponent implements OnInit, OnChanges {
 
   private engine: THREE.WebGLRenderer;
   private scene: THREE.Scene;
   private camera: THREE.PerspectiveCamera;
   private cameraControls: OrbitControls;
+  private root: Object3D;
+
+  @Input() postLayout: PostLayoutOption;
+  @Input() obstructions: ObstructionData[];
 
   @ViewChild('canvasContainer', {static: true})
   private canvasContainer: ElementRef;
@@ -29,12 +45,19 @@ export class LayoutViewComponent implements OnInit {
     this.init();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.root?.remove(...this.root.children);
+    this.assemble();
+  }
+
   get canvasElm(): HTMLElement {
     return this.canvasContainer.nativeElement;
   }
 
   private init(): void {
+    this.root = new Object3D();
     this.scene = new THREE.Scene();
+    this.scene.add(this.root);
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
     this.engine = new THREE.WebGLRenderer();
@@ -47,19 +70,23 @@ export class LayoutViewComponent implements OnInit {
 
     this.initCamera();
     this.initCameraControls();
-    this.scene.add(new THREE.AxesHelper(500));
-    this.scene.add(new THREE.CameraHelper(this.camera));
 
-    this.addPost(0);
-    this.addPost(20);
-    this.addObstruction(3, 3, ObstructionType.PLACE_POST);
-    this.addObstruction(6, 3, ObstructionType.TRY_TO_AVOID);
-    this.addObstruction(9, 3, ObstructionType.MUST_AVOID);
+    if (!environment.production) {
+      this.scene.add(new THREE.AxesHelper(500));
+      this.scene.add(new THREE.CameraHelper(this.camera));
+    }
+
+    this.assemble();
 
     this.initLight();
     this.addGround();
 
     this.run();
+  }
+
+  private assemble(): void {
+    this.postLayout?.posts.forEach(post => this.addPost(post.postHorPosition));
+    this.obstructions?.forEach(obstruction => this.addObstruction(obstruction.horLocation, obstruction.size, obstruction.type))
   }
 
   private initLight(): void {
@@ -84,7 +111,7 @@ export class LayoutViewComponent implements OnInit {
 
     post.position.x = position;
     post.position.y = 24;
-    this.scene.add(post);
+    this.root.add(post);
   }
 
   private addObstruction(position: number, size: number, type: ObstructionType): void {
@@ -94,7 +121,7 @@ export class LayoutViewComponent implements OnInit {
 
     obstruction.position.x = position;
     obstruction.position.y = 0.5;
-    this.scene.add(obstruction);
+    this.root.add(obstruction);
   }
 
   private initCamera(): void {

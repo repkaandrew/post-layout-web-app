@@ -6,6 +6,7 @@
   margin: 2em auto;
   background-color: white;
   border-radius: 4px;
+  position: relative;
 }
 
 .form-container {
@@ -91,10 +92,17 @@
   margin-top: 16px;
   width: 200px;
   border-color: #dee2e6;
+}
 
-
-  &:disabled {
+.btn:disabled {
     pointer-events: auto;
     cursor: not-allowed;
   }
+
+.options-selection-section {
+  position: absolute;
+  left: 45%;
+  top: 16px;
+  display: flex;
+  gap: 4px;
 }
