@@ -99,6 +99,15 @@
             (click)="onNextOption()">
       <span>&rArr;</span>
     </button>
+
+    <div class="layout-description" *ngIf="selectedOption">
+      <p>
+        {{getDescription(selectedOption.description)}}
+      </p>
+      <p>
+        Corner to corner: {{getCenterToCenterLength(selectedOption) | json}}
+      </p>
+    </div>
   </div>
 </div>
 

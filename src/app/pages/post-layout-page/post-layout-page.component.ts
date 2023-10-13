@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ObstructionData, ObstructionType, PostLayoutInput} from '../../models/post-layout-input';
-import {PostLayoutOption} from '../../models/post-layout-option';
+import {PostLayoutDescription, PostLayoutOption} from '../../models/post-layout-option';
 import {PostLayoutService} from '../../services/post-layout-service';
 import * as _ from 'lodash';
 
@@ -115,5 +115,23 @@ export class PostLayoutPageComponent implements OnInit {
 
   private get selectedOptionIndex(): number | undefined {
     return this.postLayoutOptions.indexOf(this.selectedOption);
+  }
+
+  getDescription(description: PostLayoutDescription): string {
+    return `Option ${this.selectedOptionIndex + 1}: even layout ${description.evenLayout};
+     extra posts ${description.additionalPosts};
+      try avoid ${description.postsFallOnTryToAvoid};
+       must avoid: ${description.postsFallOnMustAvoid}`;
+  }
+
+  getCenterToCenterLength(selectedOption: PostLayoutOption): number[] {
+    const locations = selectedOption.postLocations;
+    const c2c = [];
+
+    for (let i = 1; i < locations.length; i++) {
+      c2c.push(_.round(locations[i] - locations[i - 1], 1));
+    }
+
+    return c2c;
   }
 }
