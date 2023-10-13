@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ObstructionData, ObstructionType} from '../../models/post-layout-input';
+import {ObstructionData, ObstructionType, PostLayoutInput} from '../../models/post-layout-input';
 import {PostLayoutOption} from '../../models/post-layout-option';
 import {PostLayoutService} from '../../services/post-layout-service';
 import * as _ from 'lodash';
@@ -12,17 +12,17 @@ import * as _ from 'lodash';
 })
 export class PostLayoutPageComponent implements OnInit {
 
-  readonly controls: { [key: string]: string } = {
+  readonly controls: { [key in keyof PostLayoutInput]: string } = {
     postSize: 'postSize',
     panelMaxLength: 'panelMaxLength',
     runHorLength: 'runHorLength',
     obstructions: 'obstructions'
   };
 
-  readonly obstructionControls: { [key: string]: string } = {
+  readonly obstructionControls: { [key in keyof ObstructionData]: string } = {
     size: 'size',
     type: 'type',
-    horLocation: 'horLocation'
+    location: 'location'
   };
 
   readonly obstructionOptions: { name: string, value: ObstructionType }[] = [
@@ -73,7 +73,7 @@ export class PostLayoutPageComponent implements OnInit {
   private createObstructionGroup(): FormGroup {
     return this.fb.group({
       [this.obstructionControls.size]: this.createNumberControl(),
-      [this.obstructionControls.horLocation]: this.createNumberControl(),
+      [this.obstructionControls.location]: this.createNumberControl(),
       [this.obstructionControls.type]: this.fb.control<ObstructionType>(ObstructionType.TRY_TO_AVOID, Validators.required)
     });
   }
@@ -81,6 +81,7 @@ export class PostLayoutPageComponent implements OnInit {
   async calculate(): Promise<void> {
     this.postLayoutOptions = await this.layoutService.calculateOptions(this.form.value);
     this.selectedOption = _.first(this.postLayoutOptions);
+    console.log(this.postLayoutOptions);
     this.currObstructions = this.obstructionsArray.value;
   }
 

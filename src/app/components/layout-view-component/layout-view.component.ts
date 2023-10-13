@@ -5,6 +5,7 @@ import {
   Input,
   OnChanges,
   OnInit,
+  SimpleChange,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -36,6 +37,7 @@ export class LayoutViewComponent implements OnInit, OnChanges {
   private root: Object3D;
 
   @Input() postLayout: PostLayoutOption;
+  @Input() postSize: number;
   @Input() obstructions: ObstructionData[];
 
   @ViewChild('canvasContainer', {static: true})
@@ -46,8 +48,38 @@ export class LayoutViewComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.root?.remove(...this.root.children);
-    this.assemble();
+    if (changes.postLayout) {
+      this.onPostLayoutChange(changes.postLayout);
+    }
+  }
+
+  private onPostLayoutChange(change: SimpleChange): void {
+    if (change && !change.isFirstChange()) {
+      this.disposeScene();
+      this.assemble();
+    }
+  }
+
+  private disposeScene(): void {
+    this.root.children.forEach((child: any) => {
+      child.traverse((object: any) => {
+        if (object.isMesh) {
+          if (object.geometry) {
+            object.geometry.dispose();
+          }
+
+          if (Array.isArray(object.material)) {
+            (object.material as THREE.Material[]).forEach(material => material.dispose());
+          } else {
+            (object.material as THREE.Material).dispose();
+          }
+        }
+      });
+
+      child.parent.remove(child);
+    });
+
+    this.root.remove(...this.root.children);
   }
 
   get canvasElm(): HTMLElement {
@@ -85,8 +117,8 @@ export class LayoutViewComponent implements OnInit, OnChanges {
   }
 
   private assemble(): void {
-    this.postLayout?.posts.forEach(post => this.addPost(post.postHorPosition));
-    this.obstructions?.forEach(obstruction => this.addObstruction(obstruction.horLocation, obstruction.size, obstruction.type))
+    this.postLayout?.postLocations.forEach((location, i) => this.addPost(location, this.postSize, i));
+    this.obstructions?.forEach((obstruction, i) => this.addObstruction(obstruction.location, obstruction.size, obstruction.type, i))
   }
 
   private initLight(): void {
@@ -96,7 +128,7 @@ export class LayoutViewComponent implements OnInit, OnChanges {
   }
 
   private addGround(): void {
-    const geometry = new THREE.PlaneGeometry(1000, 1000);
+    const geometry = new THREE.PlaneGeometry(10000, 500);
     const material = new THREE.MeshBasicMaterial({color: '#78b464', side: THREE.DoubleSide});
     const plane = new THREE.Mesh(geometry, material);
     plane.rotation.x = Math.PI / 2;
@@ -104,23 +136,25 @@ export class LayoutViewComponent implements OnInit, OnChanges {
     this.scene.add(plane);
   }
 
-  private addPost(position: number): void {
-    const geometry = new THREE.BoxGeometry(3.5, 48, 3.5, 100, 100, 100);
+  private addPost(position: number, size: number, index: number): void {
+    const geometry = new THREE.BoxGeometry(size, 48, size, 100, 100, 100);
     const material = new THREE.MeshPhongMaterial({color: '#59473d'});
     const post = new THREE.Mesh(geometry, material);
 
     post.position.x = position;
     post.position.y = 24;
+    post.name = `post-${index + 1}`;
     this.root.add(post);
   }
 
-  private addObstruction(position: number, size: number, type: ObstructionType): void {
-    const geometry = new THREE.CylinderGeometry(size, size, 1, 100, 100);
+  private addObstruction(position: number, size: number, type: ObstructionType, index: number): void {
+    const geometry = new THREE.CylinderGeometry(size / 2, size / 2, 1, 100, 100);
     const material = new THREE.MeshPhongMaterial({color: obstructionColor[type]});
     const obstruction = new THREE.Mesh(geometry, material);
 
     obstruction.position.x = position;
     obstruction.position.y = 0.5;
+    obstruction.name = `obstruction-${index + 1}`
     this.root.add(obstruction);
   }
 

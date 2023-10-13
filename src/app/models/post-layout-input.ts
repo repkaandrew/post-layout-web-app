@@ -14,7 +14,7 @@ export class PostLayoutInput {
 
 export class ObstructionData {
   size: number;
-  horLocation: number;
+  location: number;
   type: ObstructionType;
 }
 
