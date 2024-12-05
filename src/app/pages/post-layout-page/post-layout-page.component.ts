@@ -1,14 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ObstructionData, ObstructionType, PostLayoutInput} from '../../models/post-layout-input';
 import {PostLayoutDescription, PostLayoutOption} from '../../models/post-layout-option';
 import {PostLayoutService} from '../../services/post-layout-service';
 import * as _ from 'lodash';
+import {LayoutViewComponent} from '../../components/layout-view-component/layout-view.component';
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-post-layout-page',
   templateUrl: './post-layout-page.component.html',
-  styleUrls: ['./post-layout-page.component.scss']
+  styleUrls: ['./post-layout-page.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, LayoutViewComponent, JsonPipe]
 })
 export class PostLayoutPageComponent implements OnInit {
 
@@ -37,7 +41,7 @@ export class PostLayoutPageComponent implements OnInit {
   selectedOption: PostLayoutOption;
   currObstructions: ObstructionData[];
 
-  constructor(private fb: FormBuilder, private layoutService: PostLayoutService) {
+  constructor(private readonly fb: FormBuilder, private readonly layoutService: PostLayoutService) {
     this.postLayoutOptions = [];
   }
 

@@ -1,4 +1,4 @@
-export class PostLayoutInput {
+export class  PostLayoutInput {
   postSize: number;
   panelMaxLength: number;
   runHorLength: number;
