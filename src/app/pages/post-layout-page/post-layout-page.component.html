@@ -37,8 +37,8 @@
       </div>
 
       <div class="obstructions-array">
-        <div *ngFor="let obstruction of obstructionsArray.controls; let idx = index">
-          <div formGroupName="{{idx}}" class="obstruction-section">
+        @for (_ of obstructionsArray.controls; track $index) {
+          <div formGroupName="{{$index}}" class="obstruction-section">
             <div class="obstruction-group">
               <div class="form-input">
                 <span>Size:</span>
@@ -54,22 +54,23 @@
               </div>
               <div class="form-input">
                 <span>Type:</span>
-                <select id="obstruction-type-{{idx}}"
+                <select id="obstruction-type-{{$index}}"
                         class="default-input"
                         [formControlName]="obstructionControls.type">
-                  <option *ngFor="let option of obstructionOptions"
-                          [ngValue]="option.value">
-                    {{option.name}}
-                  </option>
+                  @for (option of obstructionOptions; track option.name) {
+                    <option [ngValue]="option.value">
+                      {{ option.name }}
+                    </option>
+                  }
                 </select>
               </div>
             </div>
             <button class="obstruction-btn"
-                    (click)="deleteObstruction(idx)">
+                    (click)="deleteObstruction($index)">
               <span>&minus;</span>
             </button>
           </div>
-        </div>
+        }
       </div>
     </div>
 
@@ -82,9 +83,9 @@
 
   <div class="view-container">
     <app-layout-view
-    [postLayout]="selectedOption"
-    [postSize]="form.get(controls.postSize).value"
-    [obstructions]="currObstructions">
+      [postLayout]="selectedOption"
+      [postSize]="form.get(controls.postSize).value"
+      [obstructions]="currObstructions">
     </app-layout-view>
   </div>
 
@@ -100,14 +101,16 @@
       <span>&rArr;</span>
     </button>
 
-    <div class="layout-description" *ngIf="selectedOption">
-      <p>
-        {{getDescription(selectedOption.description)}}
-      </p>
-      <p>
-        Corner to corner: {{getCenterToCenterLength(selectedOption) | json}}
-      </p>
-    </div>
+    @if (selectedOption) {
+      <div class="layout-description">
+        <p>
+          {{ getDescription(selectedOption.description) }}
+        </p>
+        <p>
+          Center to center: {{ getCenterToCenterLength(selectedOption) | json }}
+        </p>
+      </div>
+    }
   </div>
 </div>
 

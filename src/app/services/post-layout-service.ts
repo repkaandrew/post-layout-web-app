@@ -10,7 +10,7 @@ export class PostLayoutService {
 
   private readonly resourceUrl = `${environment.apiHost}/api/v1/post-layout`;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private readonly httpClient: HttpClient) {
   }
 
   public calculateOptions(input: PostLayoutInput): Promise<PostLayoutOption[]> {

@@ -26,7 +26,8 @@ const obstructionColor: { [key in ObstructionType]: Color } = {
   selector: 'app-layout-view',
   templateUrl: './layout-view.component.html',
   styleUrls: ['./layout-view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class LayoutViewComponent implements OnInit, OnChanges {
 
@@ -41,7 +42,7 @@ export class LayoutViewComponent implements OnInit, OnChanges {
   @Input() obstructions: ObstructionData[];
 
   @ViewChild('canvasContainer', {static: true})
-  private canvasContainer: ElementRef;
+  private readonly canvasContainer: ElementRef;
 
   ngOnInit(): void {
     this.init();
